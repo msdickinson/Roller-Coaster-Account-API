@@ -1,0 +1,2004 @@
+{
+	"info": {
+		"_postman_id": "f7335ed9-2917-4888-93a9-a90771f1647c",
+		"name": "AccountAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CreateAccount",
+			"item": [
+				{
+					"name": "CreateAccount - Local",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"value": "abc",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Username\": \"mark_12_8_2019_x1\",\n\t\"Email\": \"mark_12_8_2019_x1@Testing.com\",\n\t\"Password\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/Create",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateAccount - Dev",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Username\": \"mark_10_26_2019_x01\",\n\t\"Password\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/Create",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateAccount - Test",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"value": "abc",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Username\": \"MarK_11_28_2019_x02\",\n\t\"Password\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/Create",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateAccount - Staging",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Username\": \"mark_10_26_2019_x01\",\n\t\"Password\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/Create",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateAccount - Prod",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Username\": \"mark_10_26_2019_x01\",\n\t\"Password\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/Create",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"Create"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "LoginAccount",
+			"item": [
+				{
+					"name": "LoginAccount - Local",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"value": "abc",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "|1da2caed-4051f00e680de327",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Username\": \"mark_11_29_2019_x05\",\n\t\"Password\": \"1\"\n}"
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/Login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"Login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LoginAccount - Dev",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"value": "|2da2caec-4051f00e680de327.",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "",
+								"value": "|1da2caed-4051f00e680de327",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Username\": \"2\",\n\t\"Password\": \"1\"\n}"
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/LoginAccount",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"LoginAccount"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LoginAccount - Test",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"value": "|2da2caec-4051f00e680de327.",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "",
+								"value": "|1da2caed-4051f00e680de327",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Username\": \"2\",\n\t\"Password\": \"1\"\n}"
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/LoginAccount",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"LoginAccount"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LoginAccount - Staging",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"value": "|2da2caec-4051f00e680de327.",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "",
+								"value": "|1da2caed-4051f00e680de327",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Username\": \"2\",\n\t\"Password\": \"1\"\n}"
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/LoginAccount",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"LoginAccount"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LoginAccount - Prod",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"value": "|2da2caec-4051f00e680de327.",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "",
+								"value": "|1da2caed-4051f00e680de327",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Username\": \"2\",\n\t\"Password\": \"1\"\n}"
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/LoginAccount",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"LoginAccount"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "RefreshToken",
+			"item": [
+				{
+					"name": "UpdatePassword",
+					"item": [],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "RefreshToken - Local",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"type": "text",
+								"value": "abc",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU2MjQ0LCJleHAiOjE1NzU3NTcxNDQsImlhdCI6MTU3NTc1NjI0NH0.4VTscTe6eCT5Hd3-H9QdDibqLdUXMaQK0Mfna45BuxQ\",\r\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU2MjQ0LCJleHAiOjE2MDE2NzYyNDQsImlhdCI6MTU3NTc1NjI0NH0.G-JJn07ARL-h9UqpOaKkcDTiBZGjuu0ncs_H04vmgiM\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/RefreshToken",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"RefreshToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RefreshToken - Dev",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"type": "text",
+								"value": "abc",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU2MjQ0LCJleHAiOjE1NzU3NTcxNDQsImlhdCI6MTU3NTc1NjI0NH0.4VTscTe6eCT5Hd3-H9QdDibqLdUXMaQK0Mfna45BuxQ\",\r\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU2MjQ0LCJleHAiOjE2MDE2NzYyNDQsImlhdCI6MTU3NTc1NjI0NH0.G-JJn07ARL-h9UqpOaKkcDTiBZGjuu0ncs_H04vmgiM\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/RefreshToken",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"RefreshToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RefreshToken - Test",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"type": "text",
+								"value": "abc",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU2MjQ0LCJleHAiOjE1NzU3NTcxNDQsImlhdCI6MTU3NTc1NjI0NH0.4VTscTe6eCT5Hd3-H9QdDibqLdUXMaQK0Mfna45BuxQ\",\r\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU2MjQ0LCJleHAiOjE2MDE2NzYyNDQsImlhdCI6MTU3NTc1NjI0NH0.G-JJn07ARL-h9UqpOaKkcDTiBZGjuu0ncs_H04vmgiM\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/RefreshToken",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"RefreshToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RefreshToken - Staging",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"type": "text",
+								"value": "abc",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU2MjQ0LCJleHAiOjE1NzU3NTcxNDQsImlhdCI6MTU3NTc1NjI0NH0.4VTscTe6eCT5Hd3-H9QdDibqLdUXMaQK0Mfna45BuxQ\",\r\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU2MjQ0LCJleHAiOjE2MDE2NzYyNDQsImlhdCI6MTU3NTc1NjI0NH0.G-JJn07ARL-h9UqpOaKkcDTiBZGjuu0ncs_H04vmgiM\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/RefreshToken",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"RefreshToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RefreshToken - Prod",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"type": "text",
+								"value": "abc",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU2MjQ0LCJleHAiOjE1NzU3NTcxNDQsImlhdCI6MTU3NTc1NjI0NH0.4VTscTe6eCT5Hd3-H9QdDibqLdUXMaQK0Mfna45BuxQ\",\r\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU2MjQ0LCJleHAiOjE2MDE2NzYyNDQsImlhdCI6MTU3NTc1NjI0NH0.G-JJn07ARL-h9UqpOaKkcDTiBZGjuu0ncs_H04vmgiM\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/RefreshToken",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"RefreshToken"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "UpdatePassword",
+			"item": [
+				{
+					"name": "UpdatePassword - Local",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU3MDE2LCJleHAiOjE1NzU3NTc5MTYsImlhdCI6MTU3NTc1NzAxNn0.E6DHox4uzJLoVCd_4i4FR_s60GA_XVN3Ays3FawN-Xc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"value": "669b0369-e9e3-4efa-8caa-a4f7c58319d8",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n\t\"ExistingPassword\": \"EFG\",\n\t\"NewPassword\": \"EFGA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdatePassword",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdatePassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdatePassword - Dev",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU3MDE2LCJleHAiOjE1NzU3NTc5MTYsImlhdCI6MTU3NTc1NzAxNn0.E6DHox4uzJLoVCd_4i4FR_s60GA_XVN3Ays3FawN-Xc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"value": "669b0369-e9e3-4efa-8caa-a4f7c58319d8",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n\t\"ExistingPassword\": \"EFG\",\n\t\"NewPassword\": \"EFGA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdatePassword",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdatePassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdatePassword - Test",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU3MDE2LCJleHAiOjE1NzU3NTc5MTYsImlhdCI6MTU3NTc1NzAxNn0.E6DHox4uzJLoVCd_4i4FR_s60GA_XVN3Ays3FawN-Xc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"value": "669b0369-e9e3-4efa-8caa-a4f7c58319d8",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n\t\"ExistingPassword\": \"EFG\",\n\t\"NewPassword\": \"EFGA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdatePassword",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdatePassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdatePassword - Staging",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU3MDE2LCJleHAiOjE1NzU3NTc5MTYsImlhdCI6MTU3NTc1NzAxNn0.E6DHox4uzJLoVCd_4i4FR_s60GA_XVN3Ays3FawN-Xc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"value": "669b0369-e9e3-4efa-8caa-a4f7c58319d8",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n\t\"ExistingPassword\": \"EFG\",\n\t\"NewPassword\": \"EFGA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdatePassword",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdatePassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdatePassword - Prod",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDEwIiwibmJmIjoxNTc1NzU3MDE2LCJleHAiOjE1NzU3NTc5MTYsImlhdCI6MTU3NTc1NzAxNn0.E6DHox4uzJLoVCd_4i4FR_s60GA_XVN3Ays3FawN-Xc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Correlation-ID",
+								"value": "669b0369-e9e3-4efa-8caa-a4f7c58319d8",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n\t\"ExistingPassword\": \"EFG\",\n\t\"NewPassword\": \"EFGA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdatePassword",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdatePassword"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "HealthCheck",
+			"item": [
+				{
+					"name": "HealthCheck - Local",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/Status/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Status",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "HealthCheck - Dev",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/Status/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Status",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "HealthCheck - Test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/Status/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Status",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "HealthCheck - Staging",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/Status/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Status",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "HealthCheck - Prod",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/Status/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Status",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "RequestPasswordResetEmail",
+			"item": [
+				{
+					"name": "RequestPasswordResetEmail - Local",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Email\": \"mark_12_6_2019_x7@Testing.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/RequestPasswordResetEmail",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"RequestPasswordResetEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RequestPasswordResetEmail - Dev",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Email\": \"mark_12_6_2019_x7@Testing.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/RequestPasswordResetEmail",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"RequestPasswordResetEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RequestPasswordResetEmail - Test",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Email\": \"mark_12_6_2019_x7@Testing.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/RequestPasswordResetEmail",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"RequestPasswordResetEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RequestPasswordResetEmail - Staging",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Email\": \"mark_12_6_2019_x7@Testing.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/RequestPasswordResetEmail",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"RequestPasswordResetEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RequestPasswordResetEmail - Prod",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Email\": \"mark_12_6_2019_x7@Testing.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/RequestPasswordResetEmail",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"RequestPasswordResetEmail"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "ResetPassword",
+			"item": [
+				{
+					"name": "ResetPassword - Local",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Token\":\"2a9a6640-3611-4f8d-adeb-f35e14891966\",\n\t\"NewPassword\":\"A\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/ResetPassword",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"ResetPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ResetPassword - Dev",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Token\":\"2a9a6640-3611-4f8d-adeb-f35e14891966\",\n\t\"NewPassword\":\"A\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/ResetPassword",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"ResetPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ResetPassword - Test",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Token\":\"2a9a6640-3611-4f8d-adeb-f35e14891966\",\n\t\"NewPassword\":\"A\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/ResetPassword",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"ResetPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ResetPassword - Staging",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Token\":\"2a9a6640-3611-4f8d-adeb-f35e14891966\",\n\t\"NewPassword\":\"A\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/ResetPassword",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"ResetPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ResetPassword - Prod",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Token\":\"2a9a6640-3611-4f8d-adeb-f35e14891966\",\n\t\"NewPassword\":\"A\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/ResetPassword",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"ResetPassword"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "UpdateEmailPreference",
+			"item": [
+				{
+					"name": "UpdateEmailPreference - Local",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"EmailPreference\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdateEmailPreference",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdateEmailPreference"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateEmailPreference - Dev",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"EmailPreference\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdateEmailPreference",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdateEmailPreference"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateEmailPreference - Test",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"EmailPreference\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdateEmailPreference",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdateEmailPreference"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateEmailPreference - Staging",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"EmailPreference\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdateEmailPreference",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdateEmailPreference"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateEmailPreference - Prod",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"EmailPreference\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdateEmailPreference",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdateEmailPreference"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "ActivateEmail",
+			"item": [
+				{
+					"name": "ActivateEmail - Local",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Token\": \"cf89e2d5-0cac-445f-a1b3-d5be3f6a0373\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/ActivateEmail",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"ActivateEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ActivateEmail - Dev",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Token\": \"cf89e2d5-0cac-445f-a1b3-d5be3f6a0373\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/ActivateEmail",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"ActivateEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ActivateEmail - Test",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Token\": \"cf89e2d5-0cac-445f-a1b3-d5be3f6a0373\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/ActivateEmail",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"ActivateEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ActivateEmail - Staging",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Token\": \"cf89e2d5-0cac-445f-a1b3-d5be3f6a0373\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/ActivateEmail",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"ActivateEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ActivateEmail - Prod",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Token\": \"cf89e2d5-0cac-445f-a1b3-d5be3f6a0373\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/ActivateEmail",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"ActivateEmail"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "UpdateEmailPreferenceWithToken",
+			"item": [
+				{
+					"name": "UpdateEmailPreferenceWithToken - Local",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Token\": \"3EAEF71F-B9FC-4541-A72C-F105F97C2BEB\",\r\n\t\"EmailPreference\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdateEmailPreferenceWithToken",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdateEmailPreferenceWithToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateEmailPreferenceWithToken - Dev",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Token\": \"3EAEF71F-B9FC-4541-A72C-F105F97C2BEB\",\r\n\t\"EmailPreference\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdateEmailPreferenceWithToken",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdateEmailPreferenceWithToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateEmailPreferenceWithToken - Test",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Token\": \"3EAEF71F-B9FC-4541-A72C-F105F97C2BEB\",\r\n\t\"EmailPreference\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdateEmailPreferenceWithToken",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdateEmailPreferenceWithToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateEmailPreferenceWithToken - Staging",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Token\": \"3EAEF71F-B9FC-4541-A72C-F105F97C2BEB\",\r\n\t\"EmailPreference\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdateEmailPreferenceWithToken",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdateEmailPreferenceWithToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateEmailPreferenceWithToken - Prod",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Token\": \"3EAEF71F-B9FC-4541-A72C-F105F97C2BEB\",\r\n\t\"EmailPreference\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/Account/UpdateEmailPreferenceWithToken",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"Account",
+								"UpdateEmailPreferenceWithToken"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	]
+}
