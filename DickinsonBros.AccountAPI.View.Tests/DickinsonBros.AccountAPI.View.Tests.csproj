@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DickinsonBros.Test.12.14.2019.15.15.00" Version="1.0.0" />
     <PackageReference Include="Microsoft.Diagnostics.EventFlow.Inputs.MicrosoftLogging" Version="1.4.3" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
@@ -24,7 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.AccountAPI.View\DickinsonBros.AccountAPI.View.csproj" />
-    <ProjectReference Include="..\DickinsonBros.UnitTestHelper\DickinsonBros.UnitTestHelper.csproj" />
   </ItemGroup>
 
 </Project>

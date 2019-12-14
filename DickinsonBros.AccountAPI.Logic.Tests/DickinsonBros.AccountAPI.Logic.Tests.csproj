@@ -32,7 +32,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.AccountAPI.Infrastructure\DickinsonBros.AccountAPI.Infrastructure.csproj" />
     <ProjectReference Include="..\DickinsonBros.AccountAPI.Logic\DickinsonBros.AccountAPI.Logic.csproj" />
-    <ProjectReference Include="..\DickinsonBros.UnitTestHelper\DickinsonBros.UnitTestHelper.csproj" />
   </ItemGroup>
 
 </Project>

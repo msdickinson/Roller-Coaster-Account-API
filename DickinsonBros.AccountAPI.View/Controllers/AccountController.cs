@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using DickinsonBros.AccountAPI.Infrastructure.Logging;
 using DickinsonBros.AccountAPI.Logic.Account;
 using DickinsonBros.AccountAPI.Logic.Account.Models;
-using DickinsonBros.AccountAPI.Infrastructure.Encryption;
 using DickinsonBros.AccountAPI.Infrastructure.DateTime;
 using Microsoft.AspNetCore.Authorization;
 using System;
@@ -140,7 +139,6 @@ namespace DickinsonBros.AccountAPI.View.Controllers
             );
         }
 
-        /// <response code="403">Email Not Activated</response>
         [AllowAnonymous]
         [HttpPost("RequestPasswordResetEmail")]
         [ProducesResponseType(StatusCodes.Status200OK)]
