@@ -4,6 +4,7 @@ using DickinsonBros.AccountAPI.Infrastructure.AccountDB.Models;
 using DickinsonBros.AccountAPI.Infrastructure.DateTime;
 using DickinsonBros.AccountAPI.Infrastructure.EmailSender;
 using DickinsonBros.AccountAPI.Infrastructure.Encryption;
+using DickinsonBros.AccountAPI.Infrastructure.PasswordEncryption;
 using DickinsonBros.AccountAPI.Logic.Account.Models;
 using System.Threading.Tasks;
 
@@ -12,20 +13,20 @@ namespace DickinsonBros.AccountAPI.Logic.Account
     public class AccountManager : IAccountManager
     {
         internal readonly IAccountDBService _accountDBService;
-        internal readonly IEncryptionService _encryptionService;
+        internal readonly IPasswordEncryptionService _passwordEncryptionService;
         internal readonly IEmailService _emailService;
         internal readonly IGuidService _guidService;
 
         public AccountManager
         (
             IAccountDBService accountDBService,
-            IEncryptionService encryptionService,
+            IPasswordEncryptionService passwordEncryptionService,
             IEmailService emailService,
             IGuidService guidService
         )
         {
             _accountDBService = accountDBService;
-            _encryptionService = encryptionService;
+            _passwordEncryptionService = passwordEncryptionService;
             _emailService = emailService;
             _guidService = guidService;
         }
@@ -48,7 +49,7 @@ namespace DickinsonBros.AccountAPI.Logic.Account
                 return loginDescriptor;
             }
 
-            var encryptResult = _encryptionService.Encrypt(password, account.Salt);
+            var encryptResult = _passwordEncryptionService.Encrypt(password, account.Salt);
 
             if (account.PasswordHash != encryptResult.Hash)
             {
@@ -66,7 +67,7 @@ namespace DickinsonBros.AccountAPI.Logic.Account
         {
             var createAccountDescriptor = new CreateAccountDescriptor();
 
-            var encryptResult = _encryptionService.Encrypt(password);
+            var encryptResult = _passwordEncryptionService.Encrypt(password);
 
             var activateEmailToken = _guidService.NewGuid().ToString();
             var emailPreferenceToken = _guidService.NewGuid().ToString();
@@ -141,7 +142,7 @@ namespace DickinsonBros.AccountAPI.Logic.Account
                 return UpdatePasswordResult.AccountLocked;
             }
 
-            var encryptResult = _encryptionService.Encrypt(existingPassword, account.Salt);
+            var encryptResult = _passwordEncryptionService.Encrypt(existingPassword, account.Salt);
 
             if(account.PasswordHash != encryptResult.Hash)
             {
@@ -150,7 +151,7 @@ namespace DickinsonBros.AccountAPI.Logic.Account
                 return UpdatePasswordResult.InvaildExistingPassword;
             }
 
-            var newEncryptResult = _encryptionService.Encrypt(newPassword);
+            var newEncryptResult = _passwordEncryptionService.Encrypt(newPassword);
 
             await _accountDBService.UpdatePasswordAsync(account.AccountId, newEncryptResult.Hash, newEncryptResult.Salt);
 
@@ -166,7 +167,7 @@ namespace DickinsonBros.AccountAPI.Logic.Account
                 return ResetPasswordResult.TokenInvaild;
             }
 
-            var newEncryptResult = _encryptionService.Encrypt(newPassword);
+            var newEncryptResult = _passwordEncryptionService.Encrypt(newPassword);
 
             await _accountDBService.UpdatePasswordAsync((int)accountId, newEncryptResult.Hash, newEncryptResult.Salt);
 

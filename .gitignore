@@ -345,3 +345,4 @@ healthchecksdb
 **/appsettings.TEST.json
 **/appsettings.UAT.json
 **/appsettings.PROD.json
+/Certs

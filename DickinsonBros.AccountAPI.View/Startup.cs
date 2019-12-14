@@ -25,6 +25,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using DickinsonBros.AccountAPI.Infrastructure.PasswordEncryption;
+using DickinsonBros.AccountAPI.Infrastructure.JWT.Models;
+using DickinsonBros.AccountAPI.Infrastructure.JWT;
 
 namespace DickinsonBros.AccountAPI.View
 {
@@ -45,12 +48,16 @@ namespace DickinsonBros.AccountAPI.View
                 options.SuppressMapClientErrors = true;
             });
             services.AddOptions();
+
             services.Configure<DickinsonBrosDB>(Configuration.GetSection("DickinsonBrosDB"));
             services.Configure<JsonRedactorOptions>(Configuration.GetSection("JsonRedactorOptions"));
-            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.Configure<EncryptionSettings>(Configuration.GetSection("EncryptionSettings"));
+            services.Configure<JWTSettings>(Configuration.GetSection("JWTSettings"));
             services.AddSingleton<IAccountDBService, AccountDBService>();
-            services.AddSingleton<IDateTimeService, DateTimeService>();
             services.AddSingleton<IEncryptionService, EncryptionService>();
+            services.AddSingleton<IPasswordEncryptionService, PasswordEncryptionService>();
+            services.AddSingleton<IJWTService, JWTService>();
+            services.AddSingleton<IDateTimeService, DateTimeService>();
             services.AddSingleton<IAccountManager, AccountManager>();
             services.AddSingleton<IEmailService, EmailService>();
             services.AddScoped<ICorrelationService, CorrelationService>();
@@ -74,10 +81,8 @@ namespace DickinsonBros.AccountAPI.View
                 };
             });
 
-            // configure jwt authentication
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            var JWTSettings = Configuration.GetSection("JWTSettings").Get<JWTSettings>();
+            var key = Encoding.ASCII.GetBytes(JWTSettings.Secret);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -103,14 +108,15 @@ namespace DickinsonBros.AccountAPI.View
             });
 
             services.AddApiVersioning();
-            services.AddApiVersioning(o => {
-                o.ReportApiVersions = true;
+            services.AddApiVersioning(options => {
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = new UrlSegmentApiVersionReader();
             });
 
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Account API", Version = "1",});
-                c.DocInclusionPredicate((version, apiDescription) =>
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Account API", Version = "1"});
+                options.DocInclusionPredicate((version, apiDescription) =>
                 {
                     var apiVersionAttribute =
                         (ApiVersionAttribute)
@@ -131,19 +137,22 @@ namespace DickinsonBros.AccountAPI.View
                 });
             });
 
-
+          
         }
         private static void ReplaceVersionDescriptions(ApiDescription apiDescription, string version)
         {
             apiDescription.RelativePath = apiDescription.RelativePath.Replace("/v{version}", $"/{version}");
             var versionParameter =
                 apiDescription.ParameterDescriptions.SingleOrDefault(p => p.Name == "version");
+
             if (versionParameter != null)
+            {
                 apiDescription.ParameterDescriptions.Remove(versionParameter);
+            }
         }
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
@@ -167,9 +176,6 @@ namespace DickinsonBros.AccountAPI.View
             {
                 endpoints.MapControllers();
             });
-
-
-
         }
     }
 }

@@ -3,9 +3,9 @@
 namespace DickinsonBros.AccountAPI.Infrastructure.Encryption.Models
 {
     [ExcludeFromCodeCoverage]
-    public class AppSettings
+    public class EncryptionSettings
     {
-        public string Secret { get; set; }
-        public string RefreshSecret { get; set; }
-    }
+        public string ThumbPrint { get; set; }
+        public string StoreLocation { get; set; }
+    } 
 }

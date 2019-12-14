@@ -1,114 +1,79 @@
 ﻿using DickinsonBros.AccountAPI.Infrastructure.Encryption.Models;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace DickinsonBros.AccountAPI.Infrastructure.Encryption
 {
     public class EncryptionService : IEncryptionService
     {
-        internal readonly string _secert;
-        internal readonly string _refreshSecert;
-        public EncryptionService(IOptions<AppSettings> appSettings)
+        internal readonly string _thumbPrint;
+        internal readonly StoreLocation _storeLocation;
+        public EncryptionService(IOptions<EncryptionSettings> encryptionSettings)
         {
-            _secert = appSettings.Value.Secret;
-            _refreshSecert = appSettings.Value.RefreshSecret;
+            _thumbPrint = encryptionSettings.Value.ThumbPrint;
+            _storeLocation = encryptionSettings.Value.StoreLocation == "LocalMachine"
+                                ? StoreLocation.LocalMachine : StoreLocation.CurrentUser;
         }
-
-        public EncryptResult Encrypt(string password, string salt = null)
-        {
-            byte[] saltByteArray;
-            if (string.IsNullOrWhiteSpace(salt))
-            {
-                saltByteArray = new byte[128 / 8];
-                using (var rng = RandomNumberGenerator.Create())
-                {
-                    rng.GetBytes(saltByteArray);
-                }
-            }
-            else
-            {
-                saltByteArray = Convert.FromBase64String(salt);
-            }
-
-            string hash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password,
-                salt: saltByteArray,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 10000,
-                numBytesRequested: 256 / 8));
-
-            return new EncryptResult
-            {
-                Hash = hash,
-                Salt = Convert.ToBase64String(saltByteArray)
-            };
-        }
-
-        public string GenerateJWT(IEnumerable<Claim> claims, System.DateTime expiresDateTime, bool isRefresh = false)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(isRefresh ? _refreshSecert : _secert);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = expiresDateTime,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
-
-        public string GenerateJWT(string nameIdentifier, System.DateTime expiresDateTime, bool isRefresh = false)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(isRefresh ? _refreshSecert : _secert);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, nameIdentifier)
-                }),
-                Expires =  expiresDateTime,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
-
-        public ClaimsPrincipal GetPrincipal(string token, bool isRefresh = false, bool vaildateLifetime = true)
+        public string Decrypt(string encryptedString)
         {
             try
             {
-                JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-                JwtSecurityToken jwtToken = (JwtSecurityToken)tokenHandler.ReadToken(token);
-                if (jwtToken == null)
-                    return null;
-                byte[] key = Encoding.ASCII.GetBytes(isRefresh ? _refreshSecert : _secert);
-                TokenValidationParameters parameters = new TokenValidationParameters()
+                using (var x509Store = new X509Store(StoreName.My, _storeLocation))
                 {
-                    RequireExpirationTime = true,
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateLifetime = vaildateLifetime
-                };
-                SecurityToken securityToken;
-                ClaimsPrincipal principal = tokenHandler.ValidateToken(token,
-                      parameters, out securityToken);
-                return principal;
+                    x509Store.Open(OpenFlags.ReadOnly);
+                    var certificateCollection = x509Store.Certificates.Find(X509FindType.FindByThumbprint, _thumbPrint, false);
+                    if (certificateCollection.Count > 0)
+                    {
+                        var certificate = certificateCollection[0];
+                        using (var rsaPrivateKey = certificate.GetRSAPrivateKey())
+                        {
+                            return Encoding.ASCII.GetString(rsaPrivateKey.Decrypt(Convert.FromBase64String(encryptedString), RSAEncryptionPadding.Pkcs1));
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception($"No certificate found for Thumbprint {_thumbPrint} in location {_storeLocation}");
+                    }
+                }
             }
-            catch 
+            catch (Exception ex)
             {
-                return null;
+                throw new Exception($"Unhandled exception. Thumbprint: {_thumbPrint}, Location: {_storeLocation}", ex);
             }
         }
 
+        public string Encrypt(string rawString)
+        {
+            try
+            {
+                using (var x509Store = new X509Store(StoreName.My, _storeLocation))
+                {
+                    x509Store.Open(OpenFlags.ReadOnly);
+                    var certificateCollection = x509Store.Certificates.Find(X509FindType.FindByThumbprint, _thumbPrint, false);
+                    if (certificateCollection.Count > 0)
+                    {
+                        var certificate = certificateCollection[0];
+                        using (RSA rsa = certificate.GetRSAPrivateKey())
+                        {
+                            byte[] bytestodecrypt = Encoding.UTF8.GetBytes(rawString);
+                            byte[] plainbytes = rsa.Encrypt(bytestodecrypt, RSAEncryptionPadding.Pkcs1);
+                            return Convert.ToBase64String(plainbytes);
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception($"No certificate found for Thumbprint {_thumbPrint} in location {_storeLocation}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unhandled exception. Thumbprint: {_thumbPrint}, Location: {_storeLocation}", ex);
+            }
+        }
     }
+
 }

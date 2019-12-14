@@ -4,12 +4,13 @@ using System.Data;
 using Microsoft.Extensions.Options;
 using DickinsonBros.AccountAPI.Contracts;
 using DickinsonBros.AccountAPI.Infrastructure.Sql;
+using DickinsonBros.AccountAPI.Infrastructure.Encryption;
 
 namespace DickinsonBros.AccountAPI.Infrastructure.AccountDB
 {
     public class AccountDBService : IAccountDBService
     {
-        internal readonly DickinsonBrosDB _dickinsonBrosDB;
+        internal readonly string _dickinsonBrosDBConnectionString;
         internal readonly ISQLService _sqlService;
 
         internal const string SELECT_ACCOUNTID_BY_PASSWORD_RESET_TOKEN =    "[Account].[SelectAccountIdByPasswordResetToken]";
@@ -25,9 +26,9 @@ namespace DickinsonBros.AccountAPI.Infrastructure.AccountDB
         internal const string UPDATE_EMAIL_ACTIVE_WITH_TOKEN =              "[Account].[UpdateEmailActiveWithToken]";
         internal const string DELETE_PASSWORD_RESET_TOKEN =                 "[Account].[DeletePasswordResetToken]";
 
-        public AccountDBService(IOptions<DickinsonBrosDB> dickinsonBrosDB, ISQLService sqlService)
+        public AccountDBService(IOptions<DickinsonBrosDB> dickinsonBrosDB, IEncryptionService encryptionService, ISQLService sqlService)
         {
-            _dickinsonBrosDB = dickinsonBrosDB.Value;
+            _dickinsonBrosDBConnectionString = encryptionService.Decrypt(dickinsonBrosDB.Value.ConnectionString);
             _sqlService = sqlService;
         }
 
@@ -36,7 +37,7 @@ namespace DickinsonBros.AccountAPI.Infrastructure.AccountDB
             return await _sqlService
                         .QueryFirstAsync<InsertAccountResult>
                          (
-                             _dickinsonBrosDB.ConnectionString,
+                             _dickinsonBrosDBConnectionString,
                              INSERT_ACCOUNT,
                              insertAccountRequest,
                              commandType: CommandType.StoredProcedure
@@ -48,7 +49,7 @@ namespace DickinsonBros.AccountAPI.Infrastructure.AccountDB
             return await _sqlService
                         .QueryFirstOrDefaultAsync<Account>
                          (
-                             _dickinsonBrosDB.ConnectionString,
+                             _dickinsonBrosDBConnectionString,
                              SELECT_ACCOUNT_BY_USERNAME,
                              new
                              {
@@ -63,7 +64,7 @@ namespace DickinsonBros.AccountAPI.Infrastructure.AccountDB
             return await _sqlService
                          .QueryFirstOrDefaultAsync<Account>
                          (
-                             _dickinsonBrosDB.ConnectionString,
+                             _dickinsonBrosDBConnectionString,
                              SELECT_ACCOUNT_BY_EMAIL,
                              new
                              {
@@ -78,7 +79,7 @@ namespace DickinsonBros.AccountAPI.Infrastructure.AccountDB
             return await _sqlService
                          .QueryFirstOrDefaultAsync<Account>
                           (
-                              _dickinsonBrosDB.ConnectionString,
+                              _dickinsonBrosDBConnectionString,
                               SELECT_ACCOUNT_BY_ACCOUNT_ID,
                               new
                               {
@@ -93,7 +94,7 @@ namespace DickinsonBros.AccountAPI.Infrastructure.AccountDB
             await _sqlService
                   .ExecuteAsync
                   (
-                      _dickinsonBrosDB.ConnectionString,
+                      _dickinsonBrosDBConnectionString,
                       INSERT_PASSWORD_RESET_TOKEN,
                       new
                       {
@@ -109,7 +110,7 @@ namespace DickinsonBros.AccountAPI.Infrastructure.AccountDB
             return await _sqlService
                          .QueryFirstOrDefaultAsync<int?>
                          (
-                             _dickinsonBrosDB.ConnectionString,
+                             _dickinsonBrosDBConnectionString,
                              SELECT_ACCOUNTID_BY_PASSWORD_RESET_TOKEN,
                              new
                              {
@@ -124,7 +125,7 @@ namespace DickinsonBros.AccountAPI.Infrastructure.AccountDB
             await _sqlService
                   .ExecuteAsync
                   (
-                      _dickinsonBrosDB.ConnectionString,
+                      _dickinsonBrosDBConnectionString,
                       DELETE_PASSWORD_RESET_TOKEN,
                       new
                       {
@@ -139,7 +140,7 @@ namespace DickinsonBros.AccountAPI.Infrastructure.AccountDB
             await _sqlService
                   .ExecuteAsync
                   (
-                      _dickinsonBrosDB.ConnectionString,
+                      _dickinsonBrosDBConnectionString,
                       UPDATE_PASSWORD,
                       new
                       {
@@ -158,7 +159,7 @@ namespace DickinsonBros.AccountAPI.Infrastructure.AccountDB
             await _sqlService
                   .ExecuteAsync
                   (
-                      _dickinsonBrosDB.ConnectionString,
+                      _dickinsonBrosDBConnectionString,
                       UPDATE_EMAIL_PREFERENCES,
                       new
                       {
@@ -174,7 +175,7 @@ namespace DickinsonBros.AccountAPI.Infrastructure.AccountDB
             return await _sqlService
                .QueryFirstAsync<UpdateEmailPreferenceWithTokenDBResult>
                    (
-                       _dickinsonBrosDB.ConnectionString,
+                       _dickinsonBrosDBConnectionString,
                        UPDATE_EMAIL_PREFERENCES_WITH_TOKEN,
                        new
                        {
@@ -190,7 +191,7 @@ namespace DickinsonBros.AccountAPI.Infrastructure.AccountDB
             return await _sqlService
               .QueryFirstAsync<ActivateEmailWithTokenDBResult>
               (
-                  _dickinsonBrosDB.ConnectionString,
+                  _dickinsonBrosDBConnectionString,
                   UPDATE_EMAIL_ACTIVE_WITH_TOKEN,
                   new
                   {
@@ -205,7 +206,7 @@ namespace DickinsonBros.AccountAPI.Infrastructure.AccountDB
             await _sqlService
                .ExecuteAsync
                (
-                   _dickinsonBrosDB.ConnectionString,
+                   _dickinsonBrosDBConnectionString,
                    INSERT_PASSWORD_ATTEMPT_FAILED,
                    new
                    {

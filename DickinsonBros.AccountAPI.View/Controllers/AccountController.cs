@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using DickinsonBros.AccountAPI.Infrastructure.JWT;
 
 namespace DickinsonBros.AccountAPI.View.Controllers
 {
@@ -23,7 +24,7 @@ namespace DickinsonBros.AccountAPI.View.Controllers
     {
         internal readonly ILoggingService<AccountController> _logger;
         internal readonly IAccountManager _accountManager;
-        internal readonly IEncryptionService _encryptionService;
+        internal readonly IJWTService _jwtService;
         internal readonly IDateTimeService _dateTimeService;
 
         internal const int FIFTEEN_MIN_IN_SECONDS = 900;
@@ -32,13 +33,13 @@ namespace DickinsonBros.AccountAPI.View.Controllers
         (
             ILoggingService<AccountController> logger,
             IAccountManager accountManager,
-            IEncryptionService encryptionService,
+            IJWTService jwtService,
             IDateTimeService dateTimeService
         )
         {
             _logger = logger;
             _accountManager = accountManager;
-            _encryptionService = encryptionService;
+            _jwtService = jwtService;
             _dateTimeService = dateTimeService;
         }
  
@@ -110,8 +111,8 @@ namespace DickinsonBros.AccountAPI.View.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult RefreshToken([FromBody]RefreshTokenRequest refreshTokenRequest)
         {
-            var accessTokenClaims = _encryptionService.GetPrincipal(refreshTokenRequest.access_token, false, false);
-            var refreshTokenClaims = _encryptionService.GetPrincipal(refreshTokenRequest.refresh_token, true);
+            var accessTokenClaims = _jwtService.GetPrincipal(refreshTokenRequest.access_token, false, false);
+            var refreshTokenClaims = _jwtService.GetPrincipal(refreshTokenRequest.refresh_token, true);
 
             if (accessTokenClaims == null ||
                 refreshTokenClaims == null ||
@@ -123,8 +124,8 @@ namespace DickinsonBros.AccountAPI.View.Controllers
                 return StatusCode(401);
             }
 
-            var accessToken = _encryptionService.GenerateJWT(accessTokenClaims.Claims, _dateTimeService.GetDateTimeUTC().AddSeconds(FIFTEEN_MIN_IN_SECONDS));
-            var refreshToken = _encryptionService.GenerateJWT(accessTokenClaims.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value, _dateTimeService.GetDateTimeUTC().AddSeconds(TWO_HOURS_IN_SECONDS), true);
+            var accessToken = _jwtService.GenerateJWT(accessTokenClaims.Claims, _dateTimeService.GetDateTimeUTC().AddSeconds(FIFTEEN_MIN_IN_SECONDS));
+            var refreshToken = _jwtService.GenerateJWT(accessTokenClaims.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value, _dateTimeService.GetDateTimeUTC().AddSeconds(TWO_HOURS_IN_SECONDS), true);
 
             return new ObjectResult
             (
@@ -267,8 +268,8 @@ namespace DickinsonBros.AccountAPI.View.Controllers
 
         internal JWTResponse GetNewJWTTokens(string accountId)
         {
-            var accessToken = _encryptionService.GenerateJWT(accountId, _dateTimeService.GetDateTimeUTC().AddSeconds(FIFTEEN_MIN_IN_SECONDS));
-            var refreshToken = _encryptionService.GenerateJWT(accountId, _dateTimeService.GetDateTimeUTC().AddSeconds(TWO_HOURS_IN_SECONDS), true);
+            var accessToken = _jwtService.GenerateJWT(accountId, _dateTimeService.GetDateTimeUTC().AddSeconds(FIFTEEN_MIN_IN_SECONDS));
+            var refreshToken = _jwtService.GenerateJWT(accountId, _dateTimeService.GetDateTimeUTC().AddSeconds(TWO_HOURS_IN_SECONDS), true);
 
             return new JWTResponse
             {
