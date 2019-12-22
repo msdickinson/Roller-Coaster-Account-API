@@ -49,20 +49,6 @@ namespace DickinsonBros.AccountAPI.Infrastructure.Middleware
                     { "Body", requestBody }
                 }
             );
-                
-            _loggingService.LogInformationRedacted
-            (
-                $"+ {context.Request.Path}",
-                new Dictionary<string, object>
-                {
-                    { "Path", context.Request.Path.Value },
-                    { "Prams", context.Request.Query.ToDictionary() },
-                    { "Body", requestBody },
-                    { "BodyDecrypted", requestBody },
-                    { "DecryptSuccessful", true }
-                }
-            );
-
             using (var responseBody = new MemoryStream())
             {
                 context.Response.Body = responseBody;

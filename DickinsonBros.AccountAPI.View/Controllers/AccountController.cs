@@ -28,6 +28,7 @@ namespace DickinsonBros.AccountAPI.View.Controllers
 
         internal const int FIFTEEN_MIN_IN_SECONDS = 900;
         internal const int TWO_HOURS_IN_SECONDS = 7200;
+        internal const string BearerTokenType = "Bearer";
         public AccountController
         (
             ILoggingService<AccountController> logger,
@@ -62,12 +63,14 @@ namespace DickinsonBros.AccountAPI.View.Controllers
                 return StatusCode(409);
             }
 
-            string accountId = Convert.ToString(createAccountDescriptor.AccountId);
+            if(createAccountDescriptor.AccountId == null)
+            {
+                return StatusCode(500);
+            }
 
-            return new ObjectResult
-            (
-                GetNewJWTTokens(accountId)
-            );
+            string accountId = Convert.ToString((int)createAccountDescriptor.AccountId);
+
+            return Ok(GetNewJWTTokens(Convert.ToString(accountId)));
         }
 
         [AllowAnonymous]
@@ -97,10 +100,7 @@ namespace DickinsonBros.AccountAPI.View.Controllers
                 return StatusCode(404);
             }
 
-            return new ObjectResult
-            (
-                GetNewJWTTokens((Convert.ToString(loginRequest.AccountId)))
-            );
+            return Ok(GetNewJWTTokens(Convert.ToString(loginRequest.AccountId)));
         }
 
         [AllowAnonymous]
@@ -234,7 +234,7 @@ namespace DickinsonBros.AccountAPI.View.Controllers
 
             if (activateAccountResult == ActivateEmailResult.EmailWasAlreadyActivated)
             {
-                return StatusCode(400, "Email Was Already Activated");
+                return StatusCode(400);
             }
             return StatusCode(200);
         }
@@ -275,7 +275,7 @@ namespace DickinsonBros.AccountAPI.View.Controllers
                 AccessTokenExpiresIn = FIFTEEN_MIN_IN_SECONDS,
                 RefreshToken = refreshToken,
                 RefreshTokenExpiresIn = TWO_HOURS_IN_SECONDS,
-                TokenType = "Bearer"
+                TokenType = BearerTokenType
             };
         }
     }

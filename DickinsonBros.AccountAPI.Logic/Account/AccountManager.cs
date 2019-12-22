@@ -3,7 +3,6 @@ using DickinsonBros.AccountAPI.Infrastructure.AccountDB;
 using DickinsonBros.AccountAPI.Infrastructure.AccountDB.Models;
 using DickinsonBros.AccountAPI.Infrastructure.DateTime;
 using DickinsonBros.AccountAPI.Infrastructure.EmailSender;
-using DickinsonBros.AccountAPI.Infrastructure.Encryption;
 using DickinsonBros.AccountAPI.Infrastructure.PasswordEncryption;
 using DickinsonBros.AccountAPI.Logic.Account.Models;
 using System.Threading.Tasks;

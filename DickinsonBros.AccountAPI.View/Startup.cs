@@ -53,6 +53,8 @@ namespace DickinsonBros.AccountAPI.View
             services.Configure<JsonRedactorOptions>(Configuration.GetSection("JsonRedactorOptions"));
             services.Configure<EncryptionSettings>(Configuration.GetSection("EncryptionSettings"));
             services.Configure<JWTSettings>(Configuration.GetSection("JWTSettings"));
+
+
             services.AddSingleton<IAccountDBService, AccountDBService>();
             services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddSingleton<IPasswordEncryptionService, PasswordEncryptionService>();
@@ -176,6 +178,23 @@ namespace DickinsonBros.AccountAPI.View
             {
                 endpoints.MapControllers();
             });
+        }
+
+        public void DepcytConfig()
+        {
+            //
+
+
+            //
+
+
+            //
+
+
+            //
+
+
+            //
         }
     }
 }

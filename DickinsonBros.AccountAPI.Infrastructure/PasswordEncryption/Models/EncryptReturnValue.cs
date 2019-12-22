@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DickinsonBros.AccountAPI.Infrastructure.PasswordEncryption.Models
+﻿namespace DickinsonBros.AccountAPI.Infrastructure.PasswordEncryption.Models
 {
     public class EncryptResult
     {

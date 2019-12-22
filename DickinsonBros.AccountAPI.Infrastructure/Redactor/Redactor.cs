@@ -37,10 +37,13 @@ namespace DickinsonBros.AccountAPI.Infrastructure.Redactor
 
         public string Redact(object value)
         {
-            var json = JsonConvert.SerializeObject(value, _jsonSettings);
-            return Redact(json);
-        }
+            if (value is string)
+            {
+                return Redact((string)value);
+            }
 
+            return Redact(JsonConvert.SerializeObject(value, _jsonSettings));
+        }
         public string Redact(string json)
         {
             var jToken = Parse(json);
@@ -57,7 +60,6 @@ namespace DickinsonBros.AccountAPI.Infrastructure.Redactor
 
             return Redact(jToken).ToString();
         }
-
         internal JToken Redact(JToken node)
         {
             node?.ForEach(token => Redact(token));
@@ -88,15 +90,15 @@ namespace DickinsonBros.AccountAPI.Infrastructure.Redactor
             return node;
         }
 
-        private bool IsRedactedValue(string value)
+        internal bool IsRedactedValue(string value)
         {
             return _valuesToRedact.Any(valueToRedact => valueToRedact.IsMatch(value));
         }
-        private bool IsRedactedValue(JValue jValue)
+        internal bool IsRedactedValue(JValue jValue)
         {
             return _valuesToRedact.Any(valueToRedact => valueToRedact.IsMatch(jValue.Value.ToString()));
         }
-        private bool IsRedactedValue(JProperty property)
+        internal bool IsRedactedValue(JProperty property)
         {
             return _propertiesToRedact.Contains(property.Name);
         }
@@ -105,7 +107,18 @@ namespace DickinsonBros.AccountAPI.Infrastructure.Redactor
         {
             try
             {
-                 return JToken.Parse(value);
+                var reducedValue = value?.Trim();
+                if
+                (
+                    reducedValue != null &&
+                    (reducedValue.First() == '{' && reducedValue.Last() == '}') ||
+                    (reducedValue.First() == '[' && reducedValue.Last() == ']') ||
+                    string.Equals("null", value, StringComparison.OrdinalIgnoreCase)
+                )
+                {
+                    return JToken.Parse(value);
+                }
+                return null;
             }
             catch
             {
