@@ -14,6 +14,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace DickinsonBros.AccountAPI.View.Tests.Controllers
@@ -382,6 +383,50 @@ namespace DickinsonBros.AccountAPI.View.Tests.Controllers
         }
 
         [TestMethod]
+        public async Task LoginAsync_AccountLocked_Returns403()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+                    var loginRequest = new LoginRequest
+                    {
+                        Username = "User1000",
+                        Password = "Password!"
+                    };
+
+                    var accountManagerMock = serviceProvider.GetMock<IAccountManager>();
+                    accountManagerMock
+                        .Setup
+                        (
+                            accountManager => accountManager.LoginAsync
+                            (
+                                It.IsAny<string>(),
+                                It.IsAny<string>()
+                            )
+                        )
+                        .ReturnsAsync
+                        (
+                            new LoginDescriptor
+                            {
+                                Result = LoginResult.AccountLocked
+                            }
+                        );
+                    var uut = serviceProvider.GetControllerInstance<AccountController>();
+
+                    //Act
+                    var observed = await uut.LoginAsync(loginRequest) as StatusCodeResult;
+
+                    //Assert
+                    Assert.AreEqual(403, observed.StatusCode);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            );
+        }
+
+
+        [TestMethod]
         public async Task LoginAsync_InvaildPassword_Returns401()
         {
             await RunDependencyInjectedTestAsync
@@ -418,6 +463,562 @@ namespace DickinsonBros.AccountAPI.View.Tests.Controllers
 
                     //Act
                     var observed = await uut.LoginAsync(loginRequest) as StatusCodeResult;
+
+                    //Assert
+                    Assert.AreEqual(401, observed.StatusCode);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            );
+        }
+
+        #endregion
+
+        #region RefreshTokenAsync
+
+        [TestMethod]
+        public async Task RefreshTokenAsync_VaildTokens_Returns200AndNewTokens()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+                    var refreshTokenRequest = new RefreshTokenRequest
+                    {
+                        access_token = "AccessToken",
+                        refresh_token = "RefreshToken"
+                    };
+
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.NameIdentifier.ToString(), "1000")
+                    };
+
+                    var expectedAccessToken = "AccessTokenValue";
+                    var expectedRefreshToken = "RefreshTokenValue";
+
+                    var jwtServiceMock = serviceProvider.GetMock<IJWTService>();
+                    
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GetPrincipal
+                            (
+                                It.IsAny<string>(),
+                                false,
+                                false
+                            )
+                        )
+                        .Returns
+                        (
+                            new ClaimsPrincipal(new ClaimsIdentity(claims, "Basic"))
+                        );
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GetPrincipal
+                            (
+                                It.IsAny<string>(),
+                                true,
+                                true
+                            )
+                        )
+                        .Returns
+                        (
+                            new ClaimsPrincipal(new ClaimsIdentity(claims, "Basic"))
+                        );
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GenerateJWT
+                            (
+                                It.IsAny<IEnumerable<Claim>>(),
+                                It.IsAny<DateTime>(),
+                                It.IsAny<bool>()
+                            )
+                        )
+                        .Returns(expectedAccessToken);
+
+                       jwtServiceMock
+                            .Setup
+                            (
+                                jwtService => jwtService.GenerateJWT
+                                (
+                                    It.IsAny<string>(),
+                                    It.IsAny<DateTime>(),
+                                    true
+                                )
+                            )
+                            .Returns(expectedRefreshToken);
+
+                    var uut = serviceProvider.GetControllerInstance<AccountController>();
+
+                    //Act
+                    var observed = await uut.RefreshTokenAsync(refreshTokenRequest) as OkObjectResult;
+
+                    //Assert
+                    Assert.AreEqual(200, observed.StatusCode);
+                    Assert.AreEqual(expectedAccessToken, ((JWTResponse)observed.Value).AccessToken);
+                    Assert.AreEqual(expectedRefreshToken, ((JWTResponse)observed.Value).RefreshToken);
+                    Assert.AreEqual(AccountController.FIFTEEN_MIN_IN_SECONDS, ((JWTResponse)observed.Value).AccessTokenExpiresIn);
+                    Assert.AreEqual(AccountController.TWO_HOURS_IN_SECONDS, ((JWTResponse)observed.Value).RefreshTokenExpiresIn);
+                    Assert.AreEqual(AccountController.BearerTokenType, ((JWTResponse)observed.Value).TokenType);
+
+
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            );
+        }
+
+        [TestMethod]
+        public async Task RefreshTokenAsync_AccessTokenClaimsIsNull_Returns401()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+                    var refreshTokenRequest = new RefreshTokenRequest
+                    {
+                        access_token = "AccessToken",
+                        refresh_token = "RefreshToken"
+                    };
+
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.NameIdentifier.ToString(), "1000")
+                    };
+
+                    var expectedAccessToken = "AccessTokenValue";
+                    var expectedRefreshToken = "RefreshTokenValue";
+
+                    var jwtServiceMock = serviceProvider.GetMock<IJWTService>();
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GetPrincipal
+                            (
+                                It.IsAny<string>(),
+                                false,
+                                false
+                            )
+                        )
+                        .Returns
+                        (
+                            (ClaimsPrincipal)null
+                        );
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GetPrincipal
+                            (
+                                It.IsAny<string>(),
+                                true,
+                                true
+                            )
+                        )
+                        .Returns
+                        (
+                            new ClaimsPrincipal(new ClaimsIdentity(claims, "Basic"))
+                        );
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GenerateJWT
+                            (
+                                It.IsAny<IEnumerable<Claim>>(),
+                                It.IsAny<DateTime>(),
+                                It.IsAny<bool>()
+                            )
+                        )
+                        .Returns(expectedAccessToken);
+
+                    jwtServiceMock
+                         .Setup
+                         (
+                             jwtService => jwtService.GenerateJWT
+                             (
+                                 It.IsAny<string>(),
+                                 It.IsAny<DateTime>(),
+                                 true
+                             )
+                         )
+                         .Returns(expectedRefreshToken);
+
+                    var uut = serviceProvider.GetControllerInstance<AccountController>();
+
+                    //Act
+                    var observed = await uut.RefreshTokenAsync(refreshTokenRequest) as StatusCodeResult;
+
+                    //Assert
+                    Assert.AreEqual(401, observed.StatusCode);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            );
+        }
+
+        [TestMethod]
+        public async Task RefreshTokenAsync_RefreshTokenClaimsIsNull_Returns401()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+                    var refreshTokenRequest = new RefreshTokenRequest
+                    {
+                        access_token = "AccessToken",
+                        refresh_token = "RefreshToken"
+                    };
+
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.NameIdentifier.ToString(), "1000")
+                    };
+
+                    var expectedAccessToken = "AccessTokenValue";
+                    var expectedRefreshToken = "RefreshTokenValue";
+
+                    var jwtServiceMock = serviceProvider.GetMock<IJWTService>();
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GetPrincipal
+                            (
+                                It.IsAny<string>(),
+                                false,
+                                false
+                            )
+                        )
+                        .Returns
+                        (
+                            new ClaimsPrincipal(new ClaimsIdentity(claims, "Basic"))
+                        );
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GetPrincipal
+                            (
+                                It.IsAny<string>(),
+                                true,
+                                true
+                            )
+                        )
+                        .Returns
+                        (
+                            (ClaimsPrincipal)null
+                        );
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GenerateJWT
+                            (
+                                It.IsAny<IEnumerable<Claim>>(),
+                                It.IsAny<DateTime>(),
+                                It.IsAny<bool>()
+                            )
+                        )
+                        .Returns(expectedAccessToken);
+
+                    jwtServiceMock
+                         .Setup
+                         (
+                             jwtService => jwtService.GenerateJWT
+                             (
+                                 It.IsAny<string>(),
+                                 It.IsAny<DateTime>(),
+                                 true
+                             )
+                         )
+                         .Returns(expectedRefreshToken);
+
+                    var uut = serviceProvider.GetControllerInstance<AccountController>();
+
+                    //Act
+                    var observed = await uut.RefreshTokenAsync(refreshTokenRequest) as StatusCodeResult;
+
+                    //Assert
+                    Assert.AreEqual(401, observed.StatusCode);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            );
+        }
+
+        [TestMethod]
+        public async Task RefreshTokenAsync_AccessTokenIsNotAuthenticated_Returns401()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+                    var refreshTokenRequest = new RefreshTokenRequest
+                    {
+                        access_token = "AccessToken",
+                        refresh_token = "RefreshToken"
+                    };
+
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.NameIdentifier.ToString(), "1000")
+                    };
+
+                    var expectedAccessToken = "AccessTokenValue";
+                    var expectedRefreshToken = "RefreshTokenValue";
+
+                    var jwtServiceMock = serviceProvider.GetMock<IJWTService>();
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GetPrincipal
+                            (
+                                It.IsAny<string>(),
+                                false,
+                                false
+                            )
+                        )
+                        .Returns
+                        (
+                            new ClaimsPrincipal(new ClaimsIdentity(claims))
+                        );
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GetPrincipal
+                            (
+                                It.IsAny<string>(),
+                                true,
+                                true
+                            )
+                        )
+                        .Returns
+                        (
+                            new ClaimsPrincipal(new ClaimsIdentity(claims, "Basic"))
+                        );
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GenerateJWT
+                            (
+                                It.IsAny<IEnumerable<Claim>>(),
+                                It.IsAny<DateTime>(),
+                                It.IsAny<bool>()
+                            )
+                        )
+                        .Returns(expectedAccessToken);
+
+                    jwtServiceMock
+                         .Setup
+                         (
+                             jwtService => jwtService.GenerateJWT
+                             (
+                                 It.IsAny<string>(),
+                                 It.IsAny<DateTime>(),
+                                 true
+                             )
+                         )
+                         .Returns(expectedRefreshToken);
+
+                    var uut = serviceProvider.GetControllerInstance<AccountController>();
+
+                    //Act
+                    var observed = await uut.RefreshTokenAsync(refreshTokenRequest) as StatusCodeResult;
+
+                    //Assert
+                    Assert.AreEqual(401, observed.StatusCode);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            );
+        }
+
+        [TestMethod]
+        public async Task RefreshTokenAsync_RefreshTokenIsNotAuthenticated_Returns401()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+                    var refreshTokenRequest = new RefreshTokenRequest
+                    {
+                        access_token = "AccessToken",
+                        refresh_token = "RefreshToken"
+                    };
+
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.NameIdentifier.ToString(), "1000")
+                    };
+
+                    var expectedAccessToken = "AccessTokenValue";
+                    var expectedRefreshToken = "RefreshTokenValue";
+
+                    var jwtServiceMock = serviceProvider.GetMock<IJWTService>();
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GetPrincipal
+                            (
+                                It.IsAny<string>(),
+                                false,
+                                false
+                            )
+                        )
+                        .Returns
+                        (
+                            new ClaimsPrincipal(new ClaimsIdentity(claims, "Basic"))
+                        );
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GetPrincipal
+                            (
+                                It.IsAny<string>(),
+                                true,
+                                true
+                            )
+                        )
+                        .Returns
+                        (
+                            new ClaimsPrincipal(new ClaimsIdentity(claims))
+                        );
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GenerateJWT
+                            (
+                                It.IsAny<IEnumerable<Claim>>(),
+                                It.IsAny<DateTime>(),
+                                It.IsAny<bool>()
+                            )
+                        )
+                        .Returns(expectedAccessToken);
+
+                    jwtServiceMock
+                         .Setup
+                         (
+                             jwtService => jwtService.GenerateJWT
+                             (
+                                 It.IsAny<string>(),
+                                 It.IsAny<DateTime>(),
+                                 true
+                             )
+                         )
+                         .Returns(expectedRefreshToken);
+
+                    var uut = serviceProvider.GetControllerInstance<AccountController>();
+
+                    //Act
+                    var observed = await uut.RefreshTokenAsync(refreshTokenRequest) as StatusCodeResult;
+
+                    //Assert
+                    Assert.AreEqual(401, observed.StatusCode);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            );
+        }
+
+        [TestMethod]
+        public async Task RefreshTokenAsync_NameIdentifierDontMatch_Returns401()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+                    var refreshTokenRequest = new RefreshTokenRequest
+                    {
+                        access_token = "AccessToken",
+                        refresh_token = "RefreshToken"
+                    };
+
+                    var claimsAccess = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.NameIdentifier.ToString(), "1000")
+                    };
+
+                    var claimsRefresh = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.NameIdentifier.ToString(), "2000")
+                    };
+
+                    var expectedAccessToken = "AccessTokenValue";
+                    var expectedRefreshToken = "RefreshTokenValue";
+
+                    var jwtServiceMock = serviceProvider.GetMock<IJWTService>();
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GetPrincipal
+                            (
+                                It.IsAny<string>(),
+                                false,
+                                false
+                            )
+                        )
+                        .Returns
+                        (
+                            new ClaimsPrincipal(new ClaimsIdentity(claimsAccess))
+                        );
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GetPrincipal
+                            (
+                                It.IsAny<string>(),
+                                true,
+                                true
+                            )
+                        )
+                        .Returns
+                        (
+                            new ClaimsPrincipal(new ClaimsIdentity(claimsRefresh, "Basic"))
+                        );
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GenerateJWT
+                            (
+                                It.IsAny<IEnumerable<Claim>>(),
+                                It.IsAny<DateTime>(),
+                                It.IsAny<bool>()
+                            )
+                        )
+                        .Returns(expectedAccessToken);
+
+                    jwtServiceMock
+                         .Setup
+                         (
+                             jwtService => jwtService.GenerateJWT
+                             (
+                                 It.IsAny<string>(),
+                                 It.IsAny<DateTime>(),
+                                 true
+                             )
+                         )
+                         .Returns(expectedRefreshToken);
+
+                    var uut = serviceProvider.GetControllerInstance<AccountController>();
+
+                    //Act
+                    var observed = await uut.RefreshTokenAsync(refreshTokenRequest) as StatusCodeResult;
 
                     //Assert
                     Assert.AreEqual(401, observed.StatusCode);
@@ -557,6 +1158,88 @@ namespace DickinsonBros.AccountAPI.View.Tests.Controllers
             );
         }
 
+        [TestMethod]
+        public async Task RequestPasswordResetEmailAsync_EmailNotActivated_Returns403AndMessage()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+                    var requestPasswordResetEmailRequest = new RequestPasswordResetEmailRequest
+                    {
+                        Email = "Email@Email.com"
+                    };
+
+                    var accountManagerMock = serviceProvider.GetMock<IAccountManager>();
+
+                    accountManagerMock
+                        .Setup
+                        (
+                            accountManager => accountManager.RequestPasswordResetEmailAsync
+                            (
+                                It.IsAny<string>()
+                            )
+                        )
+                        .ReturnsAsync
+                        (
+                            RequestPasswordResetEmailResult.EmailNotActivated
+                        );
+
+                    var uut = serviceProvider.GetControllerInstance<AccountController>();
+
+                    //Act
+                    var observed = await uut.RequestPasswordResetEmailAsync(requestPasswordResetEmailRequest) as ObjectResult;
+
+                    //Assert
+                    Assert.AreEqual(403, observed.StatusCode);
+                    Assert.AreEqual(AccountController.EmailNotActivatedMessage, observed.Value.ToString());
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            );
+        }
+
+        [TestMethod]
+        public async Task RequestPasswordResetEmailAsync_NoEmailSentDueToEmailPreference_Returns403AndMessage()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+                    var requestPasswordResetEmailRequest = new RequestPasswordResetEmailRequest
+                    {
+                        Email = "Email@Email.com"
+                    };
+
+                    var accountManagerMock = serviceProvider.GetMock<IAccountManager>();
+
+                    accountManagerMock
+                        .Setup
+                        (
+                            accountManager => accountManager.RequestPasswordResetEmailAsync
+                            (
+                                It.IsAny<string>()
+                            )
+                        )
+                        .ReturnsAsync
+                        (
+                            RequestPasswordResetEmailResult.NoEmailSentDueToEmailPreference
+                        );
+
+                    var uut = serviceProvider.GetControllerInstance<AccountController>();
+
+                    //Act
+                    var observed = await uut.RequestPasswordResetEmailAsync(requestPasswordResetEmailRequest) as ObjectResult;
+
+                    //Assert
+                    Assert.AreEqual(403, observed.StatusCode);
+                    Assert.AreEqual(AccountController.NoEmailSentDueToEmailPreferenceMessage, observed.Value.ToString());
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            );
+        }
+
         #endregion
 
         #region UpdatePasswordAsync
@@ -662,6 +1345,54 @@ namespace DickinsonBros.AccountAPI.View.Tests.Controllers
 
                     //Assert
                     Assert.AreEqual(200, observed.StatusCode);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            );
+        }
+
+        [TestMethod]
+        public async Task UpdatePasswordAsync_AccountLocked_Returns403()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+                    var updatePasswordRequest = new UpdatePasswordRequest
+                    {
+                        ExistingPassword = "A",
+                        NewPassword = "B",
+                    };
+
+                    var expectedUserId = 1;
+                    var claims = new List<Claim>
+                    {
+                       new Claim(ClaimTypes.NameIdentifier.ToString(), expectedUserId.ToString())
+                    };
+
+                    var accountManagerMock = serviceProvider.GetMock<IAccountManager>();
+                    accountManagerMock
+                        .Setup
+                        (
+                            accountManager => accountManager.UpdatePasswordAsync
+                            (
+                                It.IsAny<int>(),
+                                It.IsAny<string>(),
+                                It.IsAny<string>()
+                            )
+                        )
+                        .ReturnsAsync
+                        (
+                             UpdatePasswordResult.AccountLocked
+                        );
+
+                    var uut = serviceProvider.GetControllerInstance<AccountController>(claims);
+
+                    //Act
+                    var observed = await uut.UpdatePasswordAsync(updatePasswordRequest) as StatusCodeResult;
+
+                    //Assert
+                    Assert.AreEqual(403, observed.StatusCode);
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
             );
@@ -849,6 +1580,92 @@ namespace DickinsonBros.AccountAPI.View.Tests.Controllers
 
                     //Assert
                     Assert.AreEqual(401, observed.StatusCode);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            );
+        }
+
+        #endregion
+
+        #region UpdateEmailPreferenceWithTokenAsync
+
+        [TestMethod]
+        public async Task UpdateEmailPreferenceWithTokenAsync_InvaildToken_Returns401()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+                    var updateEmailSettingsRequest = new UpdateEmailPreferenceWithTokenRequest
+                    {
+                        EmailPreference = EmailPreference.Any,
+                        Token = "Token"
+                    };
+
+                    var accountManagerMock = serviceProvider.GetMock<IAccountManager>();
+                    accountManagerMock
+                        .Setup
+                        (
+                            accountManager => accountManager.UpdateEmailPreferenceWithTokenAsync
+                            (
+                                It.IsAny<string>(),
+                                It.IsAny<EmailPreference>()
+                            )
+                        )
+                        .ReturnsAsync
+                        (
+                             UpdateEmailPreferenceWithTokenResult.InvaildToken
+                        );
+
+                    var uut = serviceProvider.GetControllerInstance<AccountController>();
+
+                    //Act
+                    var observed = await uut.UpdateEmailPreferenceWithTokenAsync(updateEmailSettingsRequest) as StatusCodeResult;
+
+                    //Assert
+                    Assert.AreEqual(401, observed.StatusCode);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            );
+        }
+
+        [TestMethod]
+        public async Task UpdateEmailPreferenceWithTokenAsync_Successful_Returns200()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+                    var updateEmailSettingsRequest = new UpdateEmailPreferenceWithTokenRequest
+                    {
+                        EmailPreference = EmailPreference.Any,
+                        Token = "Token"
+                    };
+
+                    var accountManagerMock = serviceProvider.GetMock<IAccountManager>();
+                    accountManagerMock
+                        .Setup
+                        (
+                            accountManager => accountManager.UpdateEmailPreferenceWithTokenAsync
+                            (
+                                It.IsAny<string>(),
+                                It.IsAny<EmailPreference>()
+                            )
+                        )
+                        .ReturnsAsync
+                        (
+                             UpdateEmailPreferenceWithTokenResult.Successful
+                        );
+
+                    var uut = serviceProvider.GetControllerInstance<AccountController>();
+
+                    //Act
+                    var observed = await uut.UpdateEmailPreferenceWithTokenAsync(updateEmailSettingsRequest) as StatusCodeResult;
+
+                    //Assert
+                    Assert.AreEqual(200, observed.StatusCode);
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
             );
@@ -1131,6 +1948,60 @@ namespace DickinsonBros.AccountAPI.View.Tests.Controllers
 
         #endregion
 
+        #region GetNewJWTTokens
+
+        [TestMethod]
+        public async Task GetNewJWTTokens_Runs_ReturnsJWTResponse()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+                    var accountId = "1000";
+                    var expectedAccessToken = "AccessToken123";
+                    var expectedRefreshToken = "RefreshToken123";
+
+                    var jwtServiceMock = serviceProvider.GetMock<IJWTService>();
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GenerateJWT(It.IsAny<string>(), It.IsAny<DateTime>(), false)
+                        )
+                        .Returns
+                        (
+                            expectedAccessToken
+                        );
+
+                    jwtServiceMock
+                        .Setup
+                        (
+                            jwtService => jwtService.GenerateJWT(It.IsAny<string>(), It.IsAny<DateTime>(), true)
+                        )
+                        .Returns
+                        (
+                            expectedRefreshToken
+                        );
+
+                    var uut = serviceProvider.GetControllerInstance<AccountController>();
+
+                    //Act
+                    var observed = uut.GetNewJWTTokens(accountId);
+
+                    //Assert
+                    Assert.AreEqual(expectedAccessToken, observed.AccessToken);
+                    Assert.AreEqual(AccountController.FIFTEEN_MIN_IN_SECONDS, observed.AccessTokenExpiresIn);
+                    Assert.AreEqual(expectedRefreshToken, observed.RefreshToken);
+                    Assert.AreEqual(AccountController.TWO_HOURS_IN_SECONDS, observed.RefreshTokenExpiresIn);
+                    Assert.AreEqual(AccountController.BearerTokenType, observed.TokenType);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            );
+        }
+
+        #endregion
+
         #region Helpers
 
         private IServiceCollection ConfigureServices(IServiceCollection serviceCollection)
@@ -1145,7 +2016,5 @@ namespace DickinsonBros.AccountAPI.View.Tests.Controllers
             return serviceCollection;
         }
         #endregion
-
-
     }
 }

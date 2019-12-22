@@ -29,6 +29,8 @@ namespace DickinsonBros.AccountAPI.View.Controllers
         internal const int FIFTEEN_MIN_IN_SECONDS = 900;
         internal const int TWO_HOURS_IN_SECONDS = 7200;
         internal const string BearerTokenType = "Bearer";
+        internal const string EmailNotActivatedMessage = "Email Not Activated";
+        internal const string NoEmailSentDueToEmailPreferenceMessage = "No Email Sent Due To Email Preference";
         public AccountController
         (
             ILoggingService<AccountController> logger,
@@ -103,8 +105,10 @@ namespace DickinsonBros.AccountAPI.View.Controllers
         [ProducesResponseType(typeof(JWTResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult RefreshToken([FromBody]RefreshTokenRequest refreshTokenRequest)
+        public async Task<ActionResult> RefreshTokenAsync([FromBody]RefreshTokenRequest refreshTokenRequest)
         {
+            await Task.CompletedTask;
+
             var accessTokenClaims = _jwtService.GetPrincipal(refreshTokenRequest.access_token, false, false);
             var refreshTokenClaims = _jwtService.GetPrincipal(refreshTokenRequest.refresh_token, true);
 
@@ -118,10 +122,10 @@ namespace DickinsonBros.AccountAPI.View.Controllers
                 return StatusCode(401);
             }
 
-            var accessToken = _jwtService.GenerateJWT(accessTokenClaims.Claims, _dateTimeService.GetDateTimeUTC().AddSeconds(FIFTEEN_MIN_IN_SECONDS));
+            var accessToken = _jwtService.GenerateJWT(accessTokenClaims.Claims, _dateTimeService.GetDateTimeUTC().AddSeconds(FIFTEEN_MIN_IN_SECONDS), false);
             var refreshToken = _jwtService.GenerateJWT(accessTokenClaims.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value, _dateTimeService.GetDateTimeUTC().AddSeconds(TWO_HOURS_IN_SECONDS), true);
 
-            return new ObjectResult
+            return new OkObjectResult
             (
                new JWTResponse
                {
@@ -152,12 +156,12 @@ namespace DickinsonBros.AccountAPI.View.Controllers
 
             if (requestPasswordResetEmailResult == RequestPasswordResetEmailResult.EmailNotActivated)
             {
-                return StatusCode(403, "Email Not Activated");
+                return StatusCode(403, EmailNotActivatedMessage);
             }
 
             if (requestPasswordResetEmailResult == RequestPasswordResetEmailResult.NoEmailSentDueToEmailPreference)
             {
-                return StatusCode(403, "No Email Sent Due To Email Preference");
+                return StatusCode(403, NoEmailSentDueToEmailPreferenceMessage);
             }
 
             return StatusCode(200);
