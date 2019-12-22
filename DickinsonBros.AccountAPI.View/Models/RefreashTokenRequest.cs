@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DickinsonBros.AccountAPI.View.Models
 {
+    [ExcludeFromCodeCoverage]
     public class RefreshTokenRequest
     {
         [Required]

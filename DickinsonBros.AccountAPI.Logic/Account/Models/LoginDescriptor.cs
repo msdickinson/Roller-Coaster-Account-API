@@ -6,6 +6,6 @@ namespace DickinsonBros.AccountAPI.Logic.Account.Models
     public class LoginDescriptor
     {
         public LoginResult Result { get; internal set; }
-        public int AccountId { get; internal set; }
+        public int? AccountId { get; internal set; }
     }
 }

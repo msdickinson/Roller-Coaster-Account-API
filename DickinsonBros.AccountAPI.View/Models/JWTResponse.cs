@@ -1,6 +1,9 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
+
 namespace DickinsonBros.AccountAPI.View.Models
 {
+    [ExcludeFromCodeCoverage]
     public class JWTResponse
     {
         public string? AccessToken { get; set; }

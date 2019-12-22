@@ -63,11 +63,6 @@ namespace DickinsonBros.AccountAPI.View.Controllers
                 return StatusCode(409);
             }
 
-            if(createAccountDescriptor.AccountId == null)
-            {
-                return StatusCode(500);
-            }
-
             string accountId = Convert.ToString((int)createAccountDescriptor.AccountId);
 
             return Ok(GetNewJWTTokens(Convert.ToString(accountId)));
